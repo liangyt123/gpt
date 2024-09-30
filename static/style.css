@@ -1,18 +1,83 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Georgia', serif;
+    background-image: url('/static/background.jpg'); /* 背景图可以是古代地图或卷轴 */
+    background-size: cover;
+    color: #4b2e0f; /* 深棕色文字 */
     margin: 20px;
+    padding: 20px;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5); /* 增加深色阴影 */
 }
 
 h1 {
-    color: #333;
+    color: #d4af37; /* 古铜色标题 */
+    font-size: 2.5em;
+    text-align: center;
+    text-shadow: 2px 2px 5px #000; /* 增加阴影效果 */
+    border-bottom: 2px solid #d4af37; /* 增加下划线边框 */
+    padding-bottom: 10px;
 }
 
-#playerInfo {
+#playerInfo, #storyBackground {
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+    padding: 15px;
+    border-radius: 10px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 2px solid #8b4513; /* 边框颜色为深棕色 */
 }
 
 button {
     padding: 10px 20px;
-    margin: 5px;
-    font-size: 16px;
+    margin: 10px;
+    font-size: 18px;
+    background-color: #8b4513; /* 深棕色按钮 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #a0522d; /* 鼠标悬停时按钮颜色变浅 */
+}
+
+button:active {
+    background-color: #6b4226; /* 按下时按钮变暗 */
+}
+
+#storyBackground {
+    font-size: 1.2em;
+    line-height: 1.5;
+    text-align: justify;
+    background-color: rgba(255, 255, 245, 0.9); /* 更贴近古书卷颜色 */
+    padding: 15px;
+    border: 1px solid #d4af37; /* 金色边框 */
+    border-radius: 10px;
+}
+
+/* 日志框样式 */
+#logBox {
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto; /* 可滚动 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+#logBox h2 {
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d4af37; /* 和标题相同的古铜色边框 */
+}
+
+#logContent {
+    font-size: 0.9em;
+    line-height: 1.4;
+    overflow-y: auto;
+    max-height: 250px;
 }

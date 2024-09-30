@@ -34,7 +34,18 @@ function makeChoice(choice) {
         body: JSON.stringify({ choice,token })
     })
     .then(response => response.json())
-    .then(() => {
+    .then((data) => {
+        // 更新日志框内容
+        let logContent = document.getElementById('logContent');
+        console.log(data);
+        // 如果有结果，添加到日志框 且不是 undefined
+        if (data.result) {
+            logContent.innerHTML += `<p>${data.result}</p>`;
+        }
+        
+        // 滚动到日志底部
+        logContent.scrollTop = logContent.scrollHeight;
+
         getPlayerInfo();  // 重新加载玩家信息
     });
 }

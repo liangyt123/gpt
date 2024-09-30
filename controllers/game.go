@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"mygame/choices"
 	"mygame/models"
 	"net/http"
@@ -96,10 +97,13 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
 		return
 	}
+	chText := ""
 	if input.Choice == "A" {
 		player.Territory += currentChoice.TerritoryA
+		chText = currentChoice.TextA
 	} else if input.Choice == "B" {
 		player.Territory += currentChoice.TerritoryB
+		chText = currentChoice.TextB
 	}
 
 	player.CurrentStep++
@@ -111,6 +115,8 @@ func MakeChoice(c *gin.Context) {
 		} else {
 			player.Result = "失败"
 		}
+	} else {
+		player.Result = fmt.Sprintf("%s 此时你%s，因为你的行为，领土数变为：%d", currentChoice.Story, chText, player.Territory)
 	}
 
 	c.JSON(http.StatusOK, player)
