@@ -13,6 +13,7 @@ import (
 )
 
 var playerMap = make(map[string]*models.Player)
+var choiceMap = make(map[string][]choices.Choice)
 
 type Player struct {
 	Territory int // 领土数
@@ -39,8 +40,22 @@ func getCurrentPlayer(token string) *models.Player {
 			CurrentStep: 1,
 			Result:      "",
 		}
+		choices := choices.Choices
+		//打乱
+		for i := 0; i < len(choices); i++ {
+			j := random.Intn(i + 1)
+			choices[i], choices[j] = choices[j], choices[i]
+		}
+
+		choiceMap[token] = choices
 	}
 	return playerMap[token]
+}
+
+func getCurrentChoiceList(token string) *choices.Choice {
+	mut.Lock()
+	defer mut.Unlock()
+	return &choiceMap[token][playerMap[token].CurrentStep-1]
 }
 
 var random = rand.New(rand.NewSource(uint64(time.Now().Unix())))
@@ -65,8 +80,8 @@ func GetPlayerInfo(c *gin.Context) {
 
 	}
 	// 返回当前玩家信息和故事背景
-	player := getCurrentPlayer(token)               // 获取当前玩家状态
-	choice := choices.GetChoice(player.CurrentStep) // 获取当前选项
+	player := getCurrentPlayer(token)     // 获取当前玩家状态
+	choice := getCurrentChoiceList(token) // 获取当前选项
 
 	c.JSON(http.StatusOK, gin.H{
 		"territory":    player.Territory,
