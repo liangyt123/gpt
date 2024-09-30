@@ -8,7 +8,7 @@ type Choice struct {
 	Story      string // 当前选择的故事背景
 }
 
-var choices = []Choice{
+var Choices = []Choice{
 	// 原有的 10 个场景
 	{
 		TextA:      "寻求邻国的援助",
@@ -234,8 +234,8 @@ var choices = []Choice{
 
 // 根据步骤获取当前选择
 func GetChoice(step int) Choice {
-	if step > 0 && step <= len(choices) {
-		return choices[step-1]
+	if step > 0 && step <= len(Choices) {
+		return Choices[step-1]
 	}
 	return Choice{Story: "游戏结束", TextA: "游戏结束", TextB: "游戏结束", TerritoryA: 0, TerritoryB: 0}
 }
