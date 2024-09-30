@@ -1,0 +1,38 @@
+{
+    "cards": [
+      {
+        "name": "关羽",
+        "power": 90,
+        "skill": "青龙偃月刀"
+      },
+      {
+        "name": "张飞",
+        "power": 88,
+        "skill": "丈八蛇矛"
+      },
+      {
+        "name": "赵云",
+        "power": 85,
+        "skill": "长枪"
+      }
+    ],
+    "events": [
+      {
+        "description": "天气骤变，军队战斗力下降。",
+        "resourceChange": -10
+      },
+      {
+        "description": "发现宝藏，资源大幅增加。",
+        "resourceChange": 20
+      },
+      {
+        "description": "资源紧张，民众叛乱。",
+        "resourceChange": -10
+      },
+      {
+        "description": "军队过大，内部出现分裂。",
+        "powerChange": -5
+      }
+    ]
+  }
+  
