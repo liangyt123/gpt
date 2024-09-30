@@ -8,7 +8,7 @@ type Choice struct {
 	Story      string // 当前选择的故事背景
 }
 
-var Choices = []Choice{
+var EasyChoices = []Choice{
 	{
 		TextA:      "派遣商人去邻国贸易",
 		TextB:      "征收富人的财富来补贴穷人",
@@ -221,6 +221,9 @@ var Choices = []Choice{
 		TerritoryB: 10,
 		Story:      "司法体系的变革决定了社会的公平与稳定。",
 	},
+}
+
+var Choices = []Choice{
 
 	{
 		TextA:      "寻求邻国的援助，但可能失去部分主权",
