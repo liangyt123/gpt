@@ -55,6 +55,15 @@ func getCurrentPlayer(token string) *models.Player {
 func getCurrentChoiceList(token string) *choices.Choice {
 	mut.Lock()
 	defer mut.Unlock()
+	if playerMap[token].CurrentStep-1 >= len(choiceMap[token]) {
+		return &choices.Choice{
+			TextA:      "游戏结束",
+			TextB:      "游戏结束",
+			TerritoryA: 0,
+			TerritoryB: 0,
+			Story:      "游戏结束",
+		}
+	}
 	return &choiceMap[token][playerMap[token].CurrentStep-1]
 }
 

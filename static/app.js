@@ -13,7 +13,7 @@ function getPlayerInfo() {
             // 更新玩家信息和故事背景
             console.log(data);
             document.getElementById('playerInfo').innerHTML = `
-                <p>领土: ${data.territory}</p>
+                <p>爱戴值: ${data.territory}</p>
                 <p>当前回合: ${data.current_step}</p>
                 <p>名称: ${data.token}</p>
             `;
