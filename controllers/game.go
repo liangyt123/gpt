@@ -104,6 +104,8 @@ func MakeChoice(c *gin.Context) {
 	} else if input.Choice == "B" {
 		player.Territory += currentChoice.TerritoryB
 		chText = currentChoice.TextB
+	} else {
+		// 换你怎么做
 	}
 
 	player.CurrentStep++

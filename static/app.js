@@ -11,9 +11,11 @@ function getPlayerInfo() {
         .then(response => response.json())
         .then(data => {
             // 更新玩家信息和故事背景
+            console.log(data);
             document.getElementById('playerInfo').innerHTML = `
                 <p>领土: ${data.territory}</p>
                 <p>当前步骤: ${data.current_step}</p>
+                <p>名称: ${data.token}</p>
             `;
             document.getElementById('storyBackground').innerHTML = `
                 <p>故事背景: ${data.story}</p>
