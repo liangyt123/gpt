@@ -111,7 +111,7 @@ func MakeChoice(c *gin.Context) {
 	player.CurrentStep++
 
 	// 游戏结束判断
-	if player.CurrentStep >= len(choices.Choices) {
+	if player.CurrentStep > len(choices.Choices) {
 		if player.Territory >= 100 {
 			player.Result = "胜利"
 		} else {
