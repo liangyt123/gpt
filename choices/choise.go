@@ -3,8 +3,8 @@ package choices
 type Choice struct {
 	TextA      string // 选项 A 文本
 	TextB      string // 选项 B 文本
-	TerritoryA int    // 选择 A 时领土变化
-	TerritoryB int    // 选择 B 时领土变化
+	TerritoryA int    // 选择 A 时爱戴变化
+	TerritoryB int    // 选择 B 时爱戴变化
 	Story      string // 当前选择的故事背景
 }
 
@@ -111,7 +111,7 @@ var EasyChoices = []Choice{
 	},
 	{
 		TextA:      "召回外派的将军，巩固国内力量",
-		TextB:      "继续对外扩张，扩大领土",
+		TextB:      "继续对外扩张，扩大爱戴",
 		TerritoryA: 5,
 		TerritoryB: 20,
 		Story:      "外派将军的力量削弱了国内的防御，然而扩张仍是诱人的选择。",

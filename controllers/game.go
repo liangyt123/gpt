@@ -16,7 +16,7 @@ var playerMap = make(map[string]*models.Player)
 var choiceMap = make(map[string][]choices.Choice)
 
 type Player struct {
-	Territory int // 领土数
+	Territory int // 爱戴值
 	Step      int // 当前步骤
 }
 
@@ -24,8 +24,8 @@ type Choice struct {
 	Story      string // 当前故事背景
 	TextA      string // 选项 A
 	TextB      string // 选项 B
-	TerritoryA int    // 选择 A 后增加的领土
-	TerritoryB int    // 选择 B 后的领土变化
+	TerritoryA int    // 选择 A 后增加的爱戴
+	TerritoryB int    // 选择 B 后的爱戴变化
 }
 
 var mut sync.Mutex
@@ -116,6 +116,7 @@ func MakeChoice(c *gin.Context) {
 
 	player := getCurrentPlayer(input.Token)
 	if player.Territory <= 0 {
+		player.Result = "因为你的多次错误选择，爱戴值小于 0，你失败了，成为了一个🤡,无法操作了"
 		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
 		return
 	}
@@ -152,7 +153,7 @@ func MakeChoice(c *gin.Context) {
 			player.Result = "失败"
 		}
 	} else {
-		player.Result = fmt.Sprintf("%s 此时你%s，因为你的行为，领土数变为：%d", currentChoice.Story, chText, player.Territory)
+		player.Result = fmt.Sprintf("%s 此时你%s，因为你的行为，爱戴值变为：%d", currentChoice.Story, chText, player.Territory)
 	}
 
 	c.JSON(http.StatusOK, player)
