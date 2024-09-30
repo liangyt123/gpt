@@ -115,6 +115,10 @@ func MakeChoice(c *gin.Context) {
 	}
 
 	player := getCurrentPlayer(input.Token)
+	if player.Territory <= 0 {
+		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
+		return
+	}
 	// 根据当前步骤和选择更新玩家信息
 	currentChoice := choices.GetChoice(player.CurrentStep)
 	if currentChoice.Story == "游戏结束" {
@@ -133,6 +137,12 @@ func MakeChoice(c *gin.Context) {
 	}
 
 	player.CurrentStep++
+	if player.Territory < 0 {
+		player.Territory = 0
+		player.Result = "因为你的多次错误选择，爱戴值小于 0，你失败了，成为了一个🤡"
+		c.JSON(http.StatusOK, player)
+		return
+	}
 
 	// 游戏结束判断
 	if player.CurrentStep > len(choices.Choices) {
