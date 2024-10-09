@@ -6,6 +6,7 @@ type Choice struct {
 	TerritoryA int    // 选择 A 时爱戴变化
 	TerritoryB int    // 选择 B 时爱戴变化
 	Story      string // 当前选择的故事背景
+	MiniGame   string // 当前选择的小游戏
 }
 
 var EasyChoices = []Choice{
@@ -392,6 +393,15 @@ var Choices = []Choice{
 		TerritoryA: 0,
 		TerritoryB: -10,
 		Story:      "情报的获取与信任的建立，如何选择以获取优势？", // 场景 24
+	},
+
+	{
+		TextA:      "成功通过游戏，获得奖励",
+		TextB:      "不玩游戏",
+		TerritoryA: 10,
+		TerritoryB: 0,
+		Story:      "突然遇到神仙，看你气宇非凡，万中无一的君主，规定时间通过连连看有奖励，能获得奖励", // 场景 25
+		MiniGame:   "连连看",
 	},
 }
 

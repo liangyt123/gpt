@@ -6,4 +6,5 @@ type Player struct {
 	Territory   int    `json:"territory"`
 	CurrentStep int    `json:"current_step"`
 	Result      string `json:"result"`
+	ImageBase64 string `json:"image_base64"`
 }

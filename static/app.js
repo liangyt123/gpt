@@ -11,7 +11,7 @@ function getPlayerInfo() {
         .then(response => response.json())
         .then(data => {
             // 更新玩家信息和故事背景
-            console.log(data);
+            
             document.getElementById('playerInfo').innerHTML = `
                 <p>爱戴值: ${data.territory}</p>
                 <p>当前回合: ${data.current_step}</p>
@@ -20,11 +20,23 @@ function getPlayerInfo() {
             document.getElementById('storyBackground').innerHTML = `
                 <p>故事背景: ${data.story}</p>
             `;
-            console.log('player info:', data);
+          
             token = data.token;  // 保存 token
             // 更新按钮文本
+            
             document.getElementById('choiceA').innerText = data.choice_a;
             document.getElementById('choiceB').innerText = data.choice_b;
+        
+            console.log('aaa:', data);
+       
+            // 如果是小游戏 强制开始游戏
+            if (data.mini_game == "连连看") {
+                document.getElementById('miniGame').innerHTML = `
+                    <p>小游戏: ${data.mini_game}</p>
+                    <iframe src="static/minigame/link-game/index.html" width="100%" height="660px"></iframe>
+                `;
+            }
+            
         });
 }
 
@@ -44,7 +56,7 @@ function makeChoice(choice) {
         if (data.result) {
             logContent.innerHTML += `<p>${data.result}</p>`;
         }
-        
+        document.getElementById('miniGame').innerHTML = ``;
         // 滚动到日志底部
         logContent.scrollTop = logContent.scrollHeight;
 

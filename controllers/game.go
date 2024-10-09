@@ -20,14 +20,6 @@ type Player struct {
 	Step      int // 当前步骤
 }
 
-type Choice struct {
-	Story      string // 当前故事背景
-	TextA      string // 选项 A
-	TextB      string // 选项 B
-	TerritoryA int    // 选择 A 后增加的爱戴
-	TerritoryB int    // 选择 B 后的爱戴变化
-}
-
 var mut sync.Mutex
 
 func getCurrentPlayer(token string) *models.Player {
@@ -98,10 +90,16 @@ func GetPlayerInfo(c *gin.Context) {
 		"story":        choice.Story,
 		"choice_a":     choice.TextA,
 		"choice_b":     choice.TextB,
+		"mini_game":    choice.MiniGame,
 		"token":        token,
 	})
 
 }
+
+var falseEnd = "失败"
+var trueEnd = "胜利"
+var badEnd = "因为你的多次错误选择，爱戴值小于 0，你失败了，成为了一个🤡"
+var goodEnd = "因为你的多次正确选择，爱戴值大于 100，你胜利了，成为了一个👑"
 
 // 处理玩家的选择
 func MakeChoice(c *gin.Context) {
@@ -115,15 +113,20 @@ func MakeChoice(c *gin.Context) {
 	}
 
 	player := getCurrentPlayer(input.Token)
+	// 根据当前步骤和选择更新玩家信息
+	currentChoice := choices.GetChoice(player.CurrentStep)
+	if player.Result == falseEnd || player.Result == trueEnd || player.Result == badEnd || player.Result == goodEnd || currentChoice.Story == "游戏结束" {
+		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
+		return
+	}
 	if player.Territory <= 0 {
-		player.Result = "因为你的多次错误选择，爱戴值小于 0，你失败了，成为了一个🤡,无法操作了"
+		player.Result = badEnd
 		c.JSON(http.StatusOK, player)
 		return
 	}
-	// 根据当前步骤和选择更新玩家信息
-	currentChoice := choices.GetChoice(player.CurrentStep)
-	if currentChoice.Story == "游戏结束" {
-		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
+	if player.Territory >= 100 {
+		player.Result = goodEnd
+		c.JSON(http.StatusOK, player)
 		return
 	}
 	chText := ""
@@ -140,7 +143,7 @@ func MakeChoice(c *gin.Context) {
 	player.CurrentStep++
 	if player.Territory < 0 {
 		player.Territory = 0
-		player.Result = "因为你的多次错误选择，爱戴值小于 0，你失败了，成为了一个🤡"
+		player.Result = badEnd
 		c.JSON(http.StatusOK, player)
 		return
 	}
@@ -148,12 +151,12 @@ func MakeChoice(c *gin.Context) {
 	// 游戏结束判断
 	if player.CurrentStep > len(choices.Choices) {
 		if player.Territory >= 100 {
-			player.Result = "胜利"
+			player.Result = trueEnd
 		} else {
-			player.Result = "失败"
+			player.Result = falseEnd
 		}
 	} else {
-		player.Result = fmt.Sprintf("%s 此时你%s，因为你的行为，爱戴值变为：%d", currentChoice.Story, chText, player.Territory)
+		player.Result = fmt.Sprintf("%s 此时你选择了%s，因为你的行为,爱戴值变为：%d", currentChoice.Story, chText, player.Territory)
 	}
 
 	c.JSON(http.StatusOK, player)
