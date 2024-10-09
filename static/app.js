@@ -36,6 +36,12 @@ function getPlayerInfo() {
                     <iframe src="static/minigame/link-game/index.html" width="100%" height="660px"></iframe>
                 `;
             }
+            // if (data.mini_game == "连连看") {
+            //     document.getElementById('miniGame').innerHTML = `
+            //         <p>小游戏: ${data.mini_game}</p>
+            //         <iframe src="static/minigame/h5-game-blockBreaker/index.html" width="100%" height="660px"></iframe>
+            //     `;
+            // }
             
         });
 }
