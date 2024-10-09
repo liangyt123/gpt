@@ -30,20 +30,20 @@ function getPlayerInfo() {
             console.log('aaa:', data);
        
             // 如果是小游戏 强制开始游戏
-            // if (data.mini_game == "连连看") {
-            //     document.getElementById('miniGame').innerHTML = `
-            //         <p>小游戏: ${data.mini_game}</p>
-            //         <iframe src="static/minigame/link-game/index.html" width="100%" height="660px"></iframe>
-            //     `;
-            // }
-            // if (data.mini_game == "连连看") {
-            //     document.getElementById('miniGame').innerHTML = `
-            //         <p>小游戏: ${data.mini_game}</p>
-            //         <iframe src="static/minigame/h5-game-blockBreaker/index.html" width="100%" height="660px"></iframe>
-            //     `;
-            // }
-
             if (data.mini_game == "连连看") {
+                document.getElementById('miniGame').innerHTML = `
+                    <p>小游戏: ${data.mini_game}</p>
+                    <iframe src="static/minigame/link-game/index.html" width="100%" height="660px"></iframe>
+                `;
+            }
+            if (data.mini_game == "打砖块") {
+                document.getElementById('miniGame').innerHTML = `
+                    <p>小游戏: ${data.mini_game}</p>
+                    <iframe src="static/minigame/h5-game-blockBreaker/index.html" width="100%" height="660px"></iframe>
+                `;
+            }
+
+            if (data.mini_game == "合成大西瓜") {
                 document.getElementById('miniGame').innerHTML = `
                     <p>小游戏: ${data.mini_game}</p>
                     <iframe src="static/minigame/bigwatermelon/index.html"  height="660px"></iframe>
