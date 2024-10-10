@@ -407,10 +407,10 @@ var Choices = []Choice{
 	},
 }
 
-// 根据步骤获取当前选择
-func GetChoice(step int) Choice {
-	if step > 0 && step <= len(Choices) {
-		return Choices[step-1]
-	}
-	return Choice{Story: "游戏结束", TextA: "游戏结束", TextB: "游戏结束", TerritoryA: 0, TerritoryB: 0}
-}
+// // 根据步骤获取当前选择
+// func GetChoice(step int) Choice {
+// 	if step > 0 && step <= len(Choices) {
+// 		return Choices[step-1]
+// 	}
+// 	return Choice{Story: "游戏结束", TextA: "游戏结束", TextB: "游戏结束", TerritoryA: 0, TerritoryB: 0}
+// }

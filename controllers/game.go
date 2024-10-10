@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"mygame/choices"
+	"mygame/choices/rpc"
 	"mygame/models"
 	"net/http"
 	"sync"
@@ -13,8 +14,7 @@ import (
 )
 
 var playerMap = make(map[string]*models.Player)
-var choiceMap = make(map[string][]choices.Choice)
-var historyMap = make(map[string][]choices.Choice)
+var historyMap = make(map[string][]*rpc.HistoryChoice)
 
 type Player struct {
 	Territory int // 爱戴值
@@ -32,33 +32,27 @@ func getCurrentPlayer(token string) *models.Player {
 			Territory:   50,
 			CurrentStep: 1,
 			Result:      "",
-		}
-		choices := choices.Choices
-		//打乱
-		for i := 0; i < len(choices); i++ {
-			j := random.Intn(i + 1)
-			choices[i], choices[j] = choices[j], choices[i]
+			InitIntro:   "你是一个普通的人，你的爱戴值为50，你的选择将会影响你的爱戴值，当爱戴值大于100时，你胜利，当爱戴值小于0时，你失败",
 		}
 
-		choiceMap[token] = choices
 	}
 	return playerMap[token]
 }
 
-func getCurrentChoiceList(token string) *choices.Choice {
-	mut.Lock()
-	defer mut.Unlock()
-	if playerMap[token].CurrentStep-1 >= len(choiceMap[token]) {
-		return &choices.Choice{
-			TextA:      "游戏结束",
-			TextB:      "游戏结束",
-			TerritoryA: 0,
-			TerritoryB: 0,
-			Story:      "游戏结束",
-		}
-	}
-	return &choiceMap[token][playerMap[token].CurrentStep-1]
-}
+// func getCurrentChoiceList(token string) *choices.Choice {
+// 	mut.Lock()
+// 	defer mut.Unlock()
+// 	if playerMap[token].CurrentStep-1 >= len(choiceMap[token]) {
+// 		return &choices.Choice{
+// 			TextA:      "游戏结束",
+// 			TextB:      "游戏结束",
+// 			TerritoryA: 0,
+// 			TerritoryB: 0,
+// 			Story:      "游戏结束",
+// 		}
+// 	}
+// 	return &choiceMap[token][playerMap[token].CurrentStep-1]
+// }
 
 var random = rand.New(rand.NewSource(uint64(time.Now().Unix())))
 var gToken = func() string {
@@ -82,8 +76,8 @@ func GetPlayerInfo(c *gin.Context) {
 
 	}
 	// 返回当前玩家信息和故事背景
-	player := getCurrentPlayer(token)     // 获取当前玩家状态
-	choice := getCurrentChoiceList(token) // 获取当前选项
+	player := getCurrentPlayer(token) // 获取当前玩家状态
+	choice := player.CurrentChoice
 
 	c.JSON(http.StatusOK, gin.H{
 		"territory":    player.Territory,
@@ -116,12 +110,12 @@ func MakeChoice(c *gin.Context) {
 
 	player := getCurrentPlayer(input.Token)
 	// 根据当前步骤和选择更新玩家信息
-	currentChoice := choices.GetChoice(player.CurrentStep)
+	currentChoice := player.CurrentChoice
 	if player.Result == falseEnd || player.Result == trueEnd || player.Result == badEnd || player.Result == goodEnd || currentChoice.Story == "游戏结束" {
 		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
 		return
 	}
-	historyMap[input.Token] = append(historyMap[input.Token], currentChoice)
+
 	if player.Territory <= 0 {
 		player.Result = badEnd
 		c.JSON(http.StatusOK, player)
@@ -132,16 +126,28 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusOK, player)
 		return
 	}
+
 	chText := ""
+	chVal := 0
 	if input.Choice == "A" {
 		player.Territory += currentChoice.TerritoryA
+		chVal = currentChoice.TerritoryA
 		chText = currentChoice.TextA
 	} else if input.Choice == "B" {
 		player.Territory += currentChoice.TerritoryB
+		chVal = currentChoice.TerritoryB
 		chText = currentChoice.TextB
 	} else {
 		// 换你怎么做
 	}
+	historyMap[input.Token] = append(historyMap[input.Token], &rpc.HistoryChoice{
+		Text:        chText,
+		Territory:   chVal,
+		Story:       currentChoice.Story,
+		ImageBase64: currentChoice.ImageBase64,
+	})
+
+	//发送请求获得新的选择
 
 	player.CurrentStep++
 	if player.Territory < 0 {
@@ -149,6 +155,27 @@ func MakeChoice(c *gin.Context) {
 		player.Result = badEnd
 		c.JSON(http.StatusOK, player)
 		return
+	}
+	cli := rpc.Client{BaseURL: ""}
+	r, err := cli.MakeChoice(rpc.Req{
+		Text:        chText,
+		Story:       currentChoice.Story,
+		ImageBase64: currentChoice.ImageBase64,
+		Round:       player.CurrentStep,
+		History:     historyMap[input.Token],
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get a valid response"})
+		return
+	}
+
+	player.CurrentChoice = choices.Choice{
+		TextA:       r.TextA,
+		TextB:       r.TextB,
+		TerritoryA:  r.TerritoryA,
+		TerritoryB:  r.TerritoryB,
+		Story:       r.Story,
+		ImageBase64: r.ImageBase64,
 	}
 
 	// 游戏结束判断
