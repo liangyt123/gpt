@@ -7,7 +7,7 @@ type Choice struct {
 	TerritoryB  int    `json:"territory_b"` // 选择 B 时爱戴变化
 	Story       string `json:"story"`       // 选择的故事
 	MiniGame    string `json:"mini_game"`   // 小游戏
-	ImageBase64 string
+	ImageBase64 string `json:"image_base64"`
 }
 
 var EasyChoices = []Choice{
