@@ -14,6 +14,7 @@ import (
 
 var playerMap = make(map[string]*models.Player)
 var choiceMap = make(map[string][]choices.Choice)
+var historyMap = make(map[string][]choices.Choice)
 
 type Player struct {
 	Territory int // 爱戴值
@@ -91,6 +92,7 @@ func GetPlayerInfo(c *gin.Context) {
 		"choice_a":     choice.TextA,
 		"choice_b":     choice.TextB,
 		"mini_game":    choice.MiniGame,
+		"image_base64": player.ImageBase64,
 		"token":        token,
 	})
 
@@ -119,6 +121,7 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
 		return
 	}
+	historyMap[input.Token] = append(historyMap[input.Token], currentChoice)
 	if player.Territory <= 0 {
 		player.Result = badEnd
 		c.JSON(http.StatusOK, player)

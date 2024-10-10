@@ -1,12 +1,13 @@
 package choices
 
 type Choice struct {
-	TextA      string // 选项 A 文本
-	TextB      string // 选项 B 文本
-	TerritoryA int    // 选择 A 时爱戴变化
-	TerritoryB int    // 选择 B 时爱戴变化
-	Story      string // 当前选择的故事背景
-	MiniGame   string // 当前选择的小游戏
+	TextA       string `json:"text_a"`      // 选项 A 文本
+	TextB       string `json:"text_b"`      // 选项 B 文本
+	TerritoryA  int    `json:"territory_a"` // 选择 A 时爱戴变化
+	TerritoryB  int    `json:"territory_b"` // 选择 B 时爱戴变化
+	Story       string `json:"story"`       // 选择的故事
+	MiniGame    string `json:"mini_game"`   // 小游戏
+	ImageBase64 string
 }
 
 var EasyChoices = []Choice{
@@ -396,8 +397,9 @@ var Choices = []Choice{
 	},
 
 	{
-		TextA:      "成功通过游戏，获得奖励",
-		TextB:      "不玩游戏",
+		TextA: "成功通过游戏，获得奖励",
+		TextB: "不玩游戏",
+
 		TerritoryA: 10,
 		TerritoryB: 0,
 		Story:      "突然遇到神仙，看你气宇非凡，万中无一的君主，规定时间通过连连看有奖励，能获得奖励", // 场景 25
