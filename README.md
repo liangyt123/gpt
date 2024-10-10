@@ -53,7 +53,7 @@ type resp struct {
 
 你可以使用 `curl` 或 Postman 测试此 API，发送类似以下的请求：
 
-curl -X POST http://localhost:8080/api/choice \
+`curl -X POST http://localhost:8080/api/choice \
 
   -H "Content-Type: application/json" \
 
@@ -83,15 +83,8 @@ curl -X POST http://localhost:8080/api/choice \
 
     ]
 
-    }'
+    }'`
 
 你将收到类似这样的响应：
 
-{
-    "text_a": "选项 A 文本",
-    "text_b": "选项 B 文本",
-    "territory_a": 10,
-    "territory_b": -5,
-    "story": "测试故事",
-    "image_base64": "base64图片字符串"
-}
+`{     "text_a": "选项 A 文本",     "text_b": "选项 B 文本",     "territory_a": 10,     "territory_b": -5,     "story": "测试故事",     "image_base64": "base64图片字符串" }`
