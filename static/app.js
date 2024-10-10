@@ -46,6 +46,7 @@ function getPlayerInfo() {
                         <iframe src="static/minigame/bigwatermelon/index.html"  height="660px"></iframe>
                     `;
                 }
+                document.getElementById('choiceA').innerText = data.choice_a;
                 document.getElementById('choiceA').hidden = true;    
                 document.getElementById('choiceB').innerText = data.choice_b;
             }else {
