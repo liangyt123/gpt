@@ -50,6 +50,7 @@ function getPlayerInfo() {
                 document.getElementById('choiceA').hidden = true;    
                 document.getElementById('choiceB').innerText = data.choice_b;
             }else {
+                document.getElementById('choiceA').hidden = false;   
                 document.getElementById('choiceA').innerText = data.choice_a;            
                 document.getElementById('choiceB').innerText = data.choice_b;
             }
