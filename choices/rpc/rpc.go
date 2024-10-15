@@ -14,14 +14,9 @@ type Client struct {
 	BaseURL string
 }
 
+type HistoryChoice []string
+
 // 定义请求结构体
-type HistoryChoice struct {
-	Text        string `json:"text"`         // 选项 文本
-	Territory   int    `json:"territory"`    // 选择时爱戴变化
-	Story       string `json:"story"`        // 选择的故事
-	ImageBase64 string `json:"image_base64"` // 此时生成的图片
-	Round       int    `json:"round"`        // 当前回合数
-}
 
 type Req struct {
 	Text        string           `json:"text"`         // 选项 文本
@@ -33,12 +28,13 @@ type Req struct {
 
 // 定义响应结构体
 type Resp struct {
-	TextA       string `json:"text_a"`       // 选项 A 文本
-	TextB       string `json:"text_b"`       // 选项 B 文本
-	TerritoryA  int    `json:"territory_a"`  // 选择 A 时爱戴变化
-	TerritoryB  int    `json:"territory_b"`  // 选择 B 时爱戴变化
-	Story       string `json:"story"`        // 选择的故事
-	ImageBase64 string `json:"image_base64"` // 生成图片
+	TextA      string `json:"text_a"`      // 选项 A 文本
+	TextB      string `json:"text_b"`      // 选项 B 文本
+	TerritoryA int    `json:"territory_a"` // 选择 A 时爱戴变化
+	TerritoryB int    `json:"territory_b"` // 选择 B 时爱戴变化
+	Text       string `json:"text"`        // 选择后的文本
+	Story      string `json:"story"`       // 选择后的故事
+	ImageURL   string `json:"image_url"`   // 选择后生成的图片
 }
 
 func (c *Client) MockChoice(req Req) (Resp, error) {
@@ -48,7 +44,6 @@ func (c *Client) MockChoice(req Req) (Resp, error) {
 }
 
 func (c *Client) MakeChoice(req Req) (Resp, error) {
-	c.BaseURL = "http://127.0.0.1:8000"
 	url := c.BaseURL + "/chat/"
 
 	// 序列化请求数据

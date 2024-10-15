@@ -1,13 +1,14 @@
 package choices
 
 type Choice struct {
-	TextA       string `json:"text_a"`      // 选项 A 文本
-	TextB       string `json:"text_b"`      // 选项 B 文本
-	TerritoryA  int    `json:"territory_a"` // 选择 A 时爱戴变化
-	TerritoryB  int    `json:"territory_b"` // 选择 B 时爱戴变化
-	Story       string `json:"story"`       // 选择的故事
-	MiniGame    string `json:"mini_game"`   // 小游戏
-	ImageBase64 string `json:"image_base64"`
+	TextA      string `json:"text_a"`      // 选项 A 文本
+	TextB      string `json:"text_b"`      // 选项 B 文本
+	TerritoryA int    `json:"territory_a"` // 选择 A 时爱戴变化
+	TerritoryB int    `json:"territory_b"` // 选择 B 时爱戴变化
+	Story      string `json:"story"`       // 选择的故事
+	Text       string `json:"text"`        // 选项文本
+	MiniGame   string `json:"mini_game"`   // 小游戏
+	ImageURL   string `json:"image_url"`   // 图片 URL
 }
 
 var EasyChoices = []Choice{

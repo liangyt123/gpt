@@ -10,5 +10,4 @@ type Player struct {
 	CurrentChoice choices.Choice `json:"current_choice"`
 	Result        string         `json:"result"`
 	ImageBase64   string         `json:"image_base64"`
-	InitIntro     string         `json:"init_intro"`
 }
