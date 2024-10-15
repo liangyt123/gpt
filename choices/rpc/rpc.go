@@ -2,13 +2,11 @@ package rpc
 
 import (
 	"bytes"
+	"fmt"
 
 	"encoding/json"
 	"errors"
-	"mygame/choices"
 	"net/http"
-
-	"golang.org/x/exp/rand"
 )
 
 // 实现 APIClient 接口
@@ -22,6 +20,7 @@ type HistoryChoice struct {
 	Territory   int    `json:"territory"`    // 选择时爱戴变化
 	Story       string `json:"story"`        // 选择的故事
 	ImageBase64 string `json:"image_base64"` // 此时生成的图片
+	Round       int    `json:"round"`        // 当前回合数
 }
 
 type Req struct {
@@ -44,25 +43,20 @@ type Resp struct {
 
 func (c *Client) MockChoice(req Req) (Resp, error) {
 	// 模拟返回数据
-	current := choices.EasyChoices[rand.Intn(len(choices.EasyChoices))]
-	return Resp{
-		TextA:       current.TextA,
-		TextB:       current.TextB,
-		TerritoryA:  current.TerritoryA,
-		TerritoryB:  current.TerritoryB,
-		Story:       current.Story,
-		ImageBase64: "base64",
-	}, nil
+
+	return c.MakeChoice(req)
 }
 
 func (c *Client) MakeChoice(req Req) (Resp, error) {
-	url := c.BaseURL + "/api/choice"
+	c.BaseURL = "http://127.0.0.1:8000"
+	url := c.BaseURL + "/chat/"
 
 	// 序列化请求数据
 	jsonData, err := json.Marshal(req)
 	if err != nil {
 		return Resp{}, err
 	}
+	fmt.Println("jsonData", string(jsonData))
 
 	// 发送 POST 请求
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))

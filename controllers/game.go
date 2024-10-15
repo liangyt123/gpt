@@ -27,13 +27,43 @@ func getCurrentPlayer(token string) *models.Player {
 	mut.Lock()
 	defer mut.Unlock()
 	if _, ok := playerMap[token]; !ok {
-		playerMap[token] = &models.Player{
+
+		player := &models.Player{
 			Name:        token,
 			Territory:   50,
 			CurrentStep: 1,
 			Result:      "",
 			InitIntro:   "你是一个普通的人，你的爱戴值为50，你的选择将会影响你的爱戴值，当爱戴值大于100时，你胜利，当爱戴值小于0时，你失败",
 		}
+		playerMap[token] = player
+		cli := rpc.Client{BaseURL: ""}
+		r, err := cli.MockChoice(rpc.Req{
+			Text:  "初始化",
+			Story: "你是一个普通的人，你的爱戴值为50，你的选择将会影响你的爱戴值，当爱戴值大于100时，你胜利，当爱戴值小于0时，你失败",
+			Round: 0,
+			History: []*rpc.HistoryChoice{
+				{
+					Text:        "初始化",
+					Round:       1,
+					Territory:   50,
+					Story:       "你是一个普通的人，你的爱戴值为50，你的选择将会影响你的爱戴值，当爱戴值大于100时，你胜利，当爱戴值小于0时，你失败",
+					ImageBase64: "",
+				},
+			},
+		})
+		if err != nil {
+			fmt.Println("Failed to get a valid response")
+		}
+
+		player.CurrentChoice = choices.Choice{
+			TextA:       r.TextA,
+			TextB:       r.TextB,
+			TerritoryA:  r.TerritoryA,
+			TerritoryB:  r.TerritoryB,
+			Story:       r.Story,
+			ImageBase64: r.ImageBase64,
+		}
+		fmt.Println("player", player)
 
 	}
 	return playerMap[token]
@@ -157,7 +187,7 @@ func MakeChoice(c *gin.Context) {
 		return
 	}
 	cli := rpc.Client{BaseURL: ""}
-	r, err := cli.MakeChoice(rpc.Req{
+	r, err := cli.MockChoice(rpc.Req{
 		Text:        chText,
 		Story:       currentChoice.Story,
 		ImageBase64: currentChoice.ImageBase64,
