@@ -17,7 +17,7 @@ h1 {
     padding-bottom: 10px;
 }
 
-#playerInfo, #storyBackground {
+#playerInfo, #storyBackground,#storyPlot {
     background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
     padding: 15px;
     border-radius: 10px;
@@ -48,6 +48,16 @@ button:active {
 }
 
 #storyBackground {
+    font-size: 1.2em;
+    line-height: 1.5;
+    text-align: justify;
+    background-color: rgba(255, 255, 245, 0.9); /* 更贴近古书卷颜色 */
+    padding: 15px;
+    border: 1px solid #d4af37; /* 金色边框 */
+    border-radius: 10px;
+}
+
+#storyPlot {
     font-size: 1.2em;
     line-height: 1.5;
     text-align: justify;

@@ -14,7 +14,7 @@ import (
 )
 
 var playerMap = make(map[string]*models.Player)
-var historyMap = make(map[string][]*rpc.HistoryChoice)
+var historyMap = make(map[string][]rpc.HistoryChoice)
 
 type Player struct {
 	Territory int // 爱戴值
@@ -22,7 +22,6 @@ type Player struct {
 }
 
 var mut sync.Mutex
-var baseURL = "http://127.0.0.1:8000"
 
 func getCurrentPlayer(token string) *models.Player {
 	mut.Lock()
@@ -31,30 +30,30 @@ func getCurrentPlayer(token string) *models.Player {
 
 		player := &models.Player{
 			Name:        token,
-			Territory:   50,
-			CurrentStep: 1,
+			Territory:   5,
+			CurrentStep: 0,
 			Result:      "",
 		}
 		playerMap[token] = player
-		cli := rpc.Client{BaseURL: baseURL}
+		cli := rpc.Client{}
 		req := rpc.Req{
 			Round: 0,
 		}
-		req.History = []*rpc.HistoryChoice{}
+		req.History = []rpc.HistoryChoice{}
 		r, err := cli.MockChoice(req)
 		if err != nil {
 			fmt.Println("Failed to get a valid response")
 		}
-		fmt.Println("r", r)
+		fmt.Printf("%+v", r)
 
 		player.CurrentChoice = choices.Choice{
 			TextA:      r.TextA,
 			TextB:      r.TextB,
-			TerritoryA: r.TerritoryA,
-			TerritoryB: r.TerritoryB,
-			Story:      r.Text,
+			Territory:  r.Territory,
+			Story:      r.Story,
+			Background: r.Background,
 		}
-		fmt.Println("player", player)
+		fmt.Printf("player +%v \n", player)
 
 	}
 	return playerMap[token]
@@ -107,8 +106,8 @@ func GetPlayerInfo(c *gin.Context) {
 		"choice_a":     choice.TextA,
 		"choice_b":     choice.TextB,
 		"mini_game":    choice.MiniGame,
-		"image_base64": player.ImageBase64,
 		"token":        token,
+		"background":   choice.Background,
 	})
 
 }
@@ -151,16 +150,14 @@ func MakeChoice(c *gin.Context) {
 	chText := ""
 
 	if input.Choice == "A" {
-		player.Territory += currentChoice.TerritoryA
 		chText = currentChoice.TextA
 	} else if input.Choice == "B" {
-		player.Territory += currentChoice.TerritoryB
 		chText = currentChoice.TextB
 	} else {
 		// 换你怎么做
 	}
-	historyMap[input.Token] = append(historyMap[input.Token], &rpc.HistoryChoice{
-		currentChoice.Text,
+	historyMap[input.Token] = append(historyMap[input.Token], rpc.HistoryChoice{
+		currentChoice.Story,
 		chText,
 	})
 
@@ -173,7 +170,7 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusOK, player)
 		return
 	}
-	cli := rpc.Client{BaseURL: ""}
+	cli := rpc.Client{}
 	r, err := cli.MockChoice(rpc.Req{
 		Text:    chText,
 		Story:   currentChoice.Story,
@@ -184,19 +181,19 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get a valid response"})
 		return
 	}
-
+	player.Territory = r.Territory
 	player.CurrentChoice = choices.Choice{
 		TextA:      r.TextA,
 		TextB:      r.TextB,
-		TerritoryA: r.TerritoryA,
-		TerritoryB: r.TerritoryB,
 		Story:      r.Story,
-		Text:       r.Text,
+		Background: r.Background,
+		Territory:  r.Territory,
+		MiniGame:   r.MiniGame,
 		ImageURL:   r.ImageURL,
 	}
 
 	// 游戏结束判断
-	if player.CurrentStep > len(choices.Choices) {
+	if player.CurrentStep > 100 {
 		if player.Territory >= 100 {
 			player.Result = trueEnd
 		} else {
