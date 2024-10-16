@@ -200,7 +200,7 @@ func MakeChoice(c *gin.Context) {
 			player.Result = falseEnd
 		}
 	} else {
-		player.Result = fmt.Sprintf("%s 此时你选择了%s，因为你的行为,爱戴值变为：%d", currentChoice.Story, chText, player.Territory)
+		player.Result = fmt.Sprintf("%s 此时你选择了%s 因为你的行为,爱戴值变为：%d", currentChoice.Story, chText, player.Territory)
 	}
 
 	c.JSON(http.StatusOK, player)
