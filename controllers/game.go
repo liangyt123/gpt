@@ -53,6 +53,9 @@ func getCurrentPlayer(token string) *models.Player {
 			Story:      r.Story,
 			Background: r.Background,
 		}
+		historyMap[token] = []rpc.HistoryChoice{
+			{"开始游戏", r.Story},
+		}
 		fmt.Printf("player +%v \n", player)
 
 	}
@@ -148,18 +151,17 @@ func MakeChoice(c *gin.Context) {
 	}
 
 	chText := ""
+	//chNo := 0
 
 	if input.Choice == "A" {
 		chText = currentChoice.TextA
+		//chNo = 1
 	} else if input.Choice == "B" {
 		chText = currentChoice.TextB
+		//chNo = 2
 	} else {
 		// 换你怎么做
 	}
-	historyMap[input.Token] = append(historyMap[input.Token], rpc.HistoryChoice{
-		currentChoice.Story,
-		chText,
-	})
 
 	//发送请求获得新的选择
 
@@ -171,6 +173,7 @@ func MakeChoice(c *gin.Context) {
 		return
 	}
 	cli := rpc.Client{}
+
 	r, err := cli.MockChoice(rpc.Req{
 		Text:    chText,
 		Story:   currentChoice.Story,
@@ -181,6 +184,11 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get a valid response"})
 		return
 	}
+
+	historyMap[input.Token] = append(historyMap[input.Token], rpc.HistoryChoice{
+		chText,
+		r.Story,
+	})
 	player.Territory = r.Territory
 	player.CurrentChoice = choices.Choice{
 		TextA:      r.TextA,
