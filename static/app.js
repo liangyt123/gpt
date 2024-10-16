@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:80'; // 根据你的后端地址配置
+const API_BASE_URL = 'http://192.168.116.35:80'; // 根据你的后端地址配置
 let token = "";
 
 // 获取玩家信息
