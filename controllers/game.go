@@ -49,6 +49,8 @@ func getCurrentPlayer(token string) *models.Player {
 		player.CurrentChoice = choices.Choice{
 			TextA:      r.TextA,
 			TextB:      r.TextB,
+			ResultA:    r.ResultA,
+			ResultB:    r.ResultB,
 			Territory:  r.Territory,
 			Story:      r.Story,
 			Background: r.Background,
@@ -61,21 +63,6 @@ func getCurrentPlayer(token string) *models.Player {
 	}
 	return playerMap[token]
 }
-
-// func getCurrentChoiceList(token string) *choices.Choice {
-// 	mut.Lock()
-// 	defer mut.Unlock()
-// 	if playerMap[token].CurrentStep-1 >= len(choiceMap[token]) {
-// 		return &choices.Choice{
-// 			TextA:      "游戏结束",
-// 			TextB:      "游戏结束",
-// 			TerritoryA: 0,
-// 			TerritoryB: 0,
-// 			Story:      "游戏结束",
-// 		}
-// 	}
-// 	return &choiceMap[token][playerMap[token].CurrentStep-1]
-// }
 
 var random = rand.New(rand.NewSource(uint64(time.Now().Unix())))
 var gToken = func() string {
@@ -152,12 +139,15 @@ func MakeChoice(c *gin.Context) {
 
 	chText := ""
 	//chNo := 0
+	chResult := ""
 
 	if input.Choice == "A" {
 		chText = currentChoice.TextA
+		chResult = currentChoice.ResultA
 		//chNo = 1
 	} else if input.Choice == "B" {
 		chText = currentChoice.TextB
+		chResult = currentChoice.ResultB
 		//chNo = 2
 	} else {
 		// 换你怎么做
@@ -208,7 +198,7 @@ func MakeChoice(c *gin.Context) {
 			player.Result = falseEnd
 		}
 	} else {
-		player.Result = fmt.Sprintf("%s 此时你选择了%s 因为你的行为,爱戴值变为：%d", currentChoice.Story, chText, player.Territory)
+		player.Result = fmt.Sprintf("%s 此时你选择了%s 结果:%s 因为你的行为，爱戴值变为：%d", currentChoice.Story, chText, chResult, player.Territory)
 	}
 
 	c.JSON(http.StatusOK, player)

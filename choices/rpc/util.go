@@ -9,6 +9,7 @@ import (
 type Option struct {
 	ID     int    `json:"id"`
 	Choice string `json:"选项"`
+	Result string `json:"结果"`
 }
 
 type Story struct {

@@ -29,6 +29,8 @@ type Req struct {
 type Resp struct {
 	TextA      string `json:"text_a"`     // 选项 A 文本
 	TextB      string `json:"text_b"`     // 选项 B 文本
+	ResultA    string `json:"result_a"`   // 选项 A 结果
+	ResultB    string `json:"result_b"`   // 选项 B 结果
 	Text       string `json:"text"`       // 文本
 	Background string `json:"background"` // 背景
 	Territory  int    `json:"territory"`  // 当前的领地值
@@ -82,6 +84,8 @@ func (c *Client) MockChoice(req Req) (Resp, error) {
 	return Resp{
 		TextA:      o.Options[0].Choice,
 		TextB:      o.Options[1].Choice,
+		ResultA:    o.Options[0].Result,
+		ResultB:    o.Options[1].Result,
 		Background: o.Background,
 		Territory:  o.CurrentAdoration,
 		Story:      o.Plot,

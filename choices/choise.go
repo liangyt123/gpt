@@ -3,6 +3,8 @@ package choices
 type Choice struct {
 	TextA      string `json:"text_a"`     // 选项 A 文本
 	TextB      string `json:"text_b"`     // 选项 B 文本
+	ResultA    string `json:"result_a"`   // 选项 A 结果
+	ResultB    string `json:"result_b"`   // 选项 B 结果
 	Territory  int    `json:"territory"`  // 当前值
 	Story      string `json:"story"`      // 选择的故事
 	Background string `json:"background"` // 背景
