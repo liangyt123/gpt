@@ -73,10 +73,19 @@ function makeChoice(choice) {
         .then((data) => {
             console.log('data1:', data);
             let imgUrl = data.img_url;
-            document.getElementById('miniGame').innerHTML = `
-                <p>剧情图片：</p>
-                <img src="`+imgUrl+ `" width="100%" height="660px"></iframe>
-            `;
+            // 如果 img_url 含有链接则展示图片
+            if (imgUrl == undefined) {
+                return;
+            }
+            if (imgUrl.includes('http')) {
+                let content2 = `
+                    <p>剧情图片：</p>
+                    <img src="`+imgUrl+ `" width="100%" height="660px"></iframe>
+                `
+                console.log('content:', content2);
+                document.getElementById('miniGame').innerHTML = content2 ;
+            }
+            
         })
     // 如果是 %10 == 1 强制开始游戏
     }else if (random % 10 == 1) {
