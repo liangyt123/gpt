@@ -218,9 +218,8 @@ func GenerateImage(c *gin.Context) {
 
 	// ReqBody 定义请求体结构
 	type ReqBody struct {
-		Token     string `json:"token"`      // token 字段为必填
-		Story     string `json:"story"`      // story 字段为必填
-		ImgServer int    `json:"img_server"` // img_server 字段为必填
+		Token string `json:"token"` // token 字段为必填
+		Story string `json:"story"` // story 字段为必填
 	}
 	var reqBody ReqBody
 
