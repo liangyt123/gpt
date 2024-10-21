@@ -19,11 +19,6 @@ type Story struct {
 	PlotImage        string   `json:"剧情图像"`
 	Options          []Option `json:"可选择的选项"`
 	Text             string
-
-	ImgPrompt  string `json:"img_prompt"`  // 图片提示
-	ImgBase64  string `json:"img_base64"`  // 图片 base64
-	ImgURL     string `json:"img_url"`     // 图片 url
-	ImgStatues string `json:"img_statues"` // 图片状态
 }
 
 func ParseStory(data string) (Story, error) {

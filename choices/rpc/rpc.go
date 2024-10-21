@@ -30,19 +30,16 @@ type Req struct {
 
 // 定义响应结构体
 type Resp struct {
-	TextA      string `json:"text_a"`      // 选项 A 文本
-	TextB      string `json:"text_b"`      // 选项 B 文本
-	ResultA    string `json:"result_a"`    // 选项 A 结果
-	ResultB    string `json:"result_b"`    // 选项 B 结果
-	Text       string `json:"text"`        // 文本
-	Background string `json:"background"`  // 背景
-	Territory  int    `json:"territory"`   // 当前的领地值
-	Story      string `json:"story"`       // 选择后的故事
-	ImgPrompt  string `json:"img_prompt"`  // 图片提示
-	MiniGame   string `json:"mini_game"`   // 小游戏
-	ImgBase64  string `json:"img_base64"`  // 图片 base64
-	ImgURL     string `json:"img_url"`     // 图片 url
-	ImgStatues string `json:"img_statues"` // 图片状态
+	TextA      string `json:"text_a"`     // 选项 A 文本
+	TextB      string `json:"text_b"`     // 选项 B 文本
+	ResultA    string `json:"result_a"`   // 选项 A 结果
+	ResultB    string `json:"result_b"`   // 选项 B 结果
+	Text       string `json:"text"`       // 文本
+	Background string `json:"background"` // 背景
+	Territory  int    `json:"territory"`  // 当前的领地值
+	Story      string `json:"story"`      // 选择后的故事
+	MiniGame   string `json:"mini_game"`  // 小游戏
+
 }
 
 var baseURL = "http://127.0.0.1:8000"
@@ -88,10 +85,6 @@ func (c *Client) MockChoice(req Req) (Resp, error) {
 		Text:       o.Text,
 		Territory:  o.CurrentAdoration,
 		Story:      o.Plot,
-		ImgPrompt:  o.ImgPrompt,
-		ImgBase64:  o.ImgBase64,
-		ImgURL:     o.ImgURL,
-		ImgStatues: o.ImgStatues,
 	}, nil
 
 }

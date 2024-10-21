@@ -176,18 +176,6 @@ func MakeChoice(c *gin.Context) {
 		Round:   player.CurrentStep,
 		History: historyMap[input.Token],
 	})
-	if time.Now().Unix()%3 == 0 {
-		go func() {
-			r1, _ := rpc.GenImage(r.Story, rand.Intn(10)%3)
-			if r1.ImgBase64 != "" {
-				mut.Lock()
-				player.CurrentChoice.ImgBase64 = r1.ImgBase64
-				player.CurrentChoice.ImgPrompt = r1.ImgPrompt
-				player.CurrentChoice.ImgURL = r1.ImgURL
-				mut.Unlock()
-			}
-		}()
-	}
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get a valid response"})
@@ -209,10 +197,6 @@ func MakeChoice(c *gin.Context) {
 		Background: r.Background,
 		Territory:  r.Territory,
 		MiniGame:   r.MiniGame,
-		ImgBase64:  r.ImgBase64,
-		ImgPrompt:  r.ImgPrompt,
-		ImgStatues: r.ImgStatues,
-		ImgURL:     r.ImgURL,
 	}
 
 	// 游戏结束判断
@@ -234,8 +218,9 @@ func GenerateImage(c *gin.Context) {
 
 	// ReqBody 定义请求体结构
 	type ReqBody struct {
-		Story     string `json:"story" binding:"required"`      // story 字段为必填
-		ImgServer int    `json:"img_server" binding:"required"` // img_server 字段为必填
+		Token     string `json:"token"`      // token 字段为必填
+		Story     string `json:"story"`      // story 字段为必填
+		ImgServer int    `json:"img_server"` // img_server 字段为必填
 	}
 
 	// ReturnBody 定义返回体结构
@@ -255,12 +240,16 @@ func GenerateImage(c *gin.Context) {
 	}
 
 	// 模拟生成返回的数据
-	returnBody, err := rpc.GenImage(reqBody.Story, reqBody.ImgServer)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate image"})
-		return
+	player := getCurrentPlayer(reqBody.Token)
+	r1, _ := rpc.GenImage(reqBody.Story, rand.Intn(10)%3)
+	if r1.ImgURL != "" {
+		mut.Lock()
+		player.CurrentChoice.ImgBase64 = r1.ImgBase64
+		player.CurrentChoice.ImgPrompt = r1.ImgPrompt
+		player.CurrentChoice.ImgURL = r1.ImgURL
+		mut.Unlock()
 	}
 
 	// 返回 JSON 响应
-	c.JSON(http.StatusOK, returnBody)
+	c.JSON(http.StatusOK, player)
 }
