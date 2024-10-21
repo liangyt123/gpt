@@ -10,6 +10,8 @@ import (
 	"net/http"
 )
 
+var HOST = "http://192.168.116.35"
+
 // 实现 APIClient 接口
 type Client struct {
 }
@@ -42,10 +44,10 @@ type Resp struct {
 
 }
 
-var baseURL = "http://127.0.0.1:8000"
-var baseImageURL = "http://127.0.0.1:8001"
+var baseURL = HOST + ":8000"
+var baseImageURL = HOST + ":8001"
 
-func (c *Client) MockChoice(req Req) (Resp, error) {
+func (c *Client) MakeChoice2(req Req) (Resp, error) {
 	// // 模拟返回数据
 
 	var o Story

@@ -40,7 +40,7 @@ func getCurrentPlayer(token string) *models.Player {
 			Round: 0,
 		}
 		req.History = []rpc.HistoryChoice{}
-		r, err := cli.MockChoice(req)
+		r, err := cli.MakeChoice2(req)
 		if err != nil {
 			fmt.Println("Failed to get a valid response")
 		}
@@ -170,7 +170,7 @@ func MakeChoice(c *gin.Context) {
 	}
 	cli := rpc.Client{}
 
-	r, err := cli.MockChoice(rpc.Req{
+	r, err := cli.MakeChoice2(rpc.Req{
 		Text:    chText,
 		Story:   currentChoice.Story,
 		Round:   player.CurrentStep,
