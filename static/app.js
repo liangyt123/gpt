@@ -79,7 +79,7 @@ function makeChoice(choice) {
             }
             if (imgUrl.includes('http')) {
                 let content2 = `
-                    <p>剧情图片：</p>
+                    <p>达芬奇用画笔记录了这一刻：</p>
                     <img src="`+imgUrl+ `" width="100%" height="660px"></iframe>
                 `
                 console.log('content:', content2);
