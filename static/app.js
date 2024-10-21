@@ -62,7 +62,7 @@ function makeChoice(choice) {
     let random = Math.floor(Math.random() * 10);
   
     let story = playerInfo.story;
-    console.log('story:', story);
+    console.log('story:', story,"random:",random);
     if (random % 10 >= 0) {
         fetch(`${API_BASE_URL}/api/generate`, {
             method: 'POST',
@@ -71,7 +71,7 @@ function makeChoice(choice) {
         })
         .then(response => response.json())
         .then((data) => {
-            console.log('data:', data);
+            console.log('data1:', data);
             let imgUrl = data.img_url;
             document.getElementById('miniGame').innerHTML = `
                 <p>剧情图片：</p>

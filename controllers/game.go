@@ -107,6 +107,7 @@ func GetPlayerInfo(c *gin.Context) {
 
 }
 
+var endStep = 30
 var falseEnd = "失败"
 var trueEnd = "胜利"
 var badEnd = "因为你的多次错误选择，爱戴值小于 0，你失败了，成为了一个🤡"
@@ -136,7 +137,7 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusOK, player)
 		return
 	}
-	if player.Territory >= 100 {
+	if player.Territory >= endStep {
 		player.Result = goodEnd
 		c.JSON(http.StatusOK, player)
 		return
@@ -200,7 +201,7 @@ func MakeChoice(c *gin.Context) {
 	}
 
 	// 游戏结束判断
-	if player.CurrentStep > 100 {
+	if player.CurrentStep > endStep {
 		if player.Territory >= 100 {
 			player.Result = trueEnd
 		} else {
@@ -239,6 +240,7 @@ func GenerateImage(c *gin.Context) {
 		player.CurrentChoice.ImgURL = r1.ImgURL
 		mut.Unlock()
 	}
+	fmt.Println("player", player)
 
 	// 返回 JSON 响应
 	c.JSON(http.StatusOK, player)
