@@ -222,15 +222,6 @@ func GenerateImage(c *gin.Context) {
 		Story     string `json:"story"`      // story 字段为必填
 		ImgServer int    `json:"img_server"` // img_server 字段为必填
 	}
-
-	// ReturnBody 定义返回体结构
-	type ReturnBody struct {
-		ImgPrompt string `json:"img_prompt"`
-		ImgBase64 string `json:"img_base64,omitempty"`
-		ImgURL    string `json:"img_url,omitempty"`
-		ImgStatus string `json:"img_status,omitempty"`
-	}
-
 	var reqBody ReqBody
 
 	// 绑定 JSON 请求体到结构体
