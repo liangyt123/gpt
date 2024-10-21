@@ -18,11 +18,18 @@ type Story struct {
 	Plot             string   `json:"剧情"`
 	PlotImage        string   `json:"剧情图像"`
 	Options          []Option `json:"可选择的选项"`
+	Text             string
+
+	ImgPrompt  string `json:"img_prompt"`  // 图片提示
+	ImgBase64  string `json:"img_base64"`  // 图片 base64
+	ImgURL     string `json:"img_url"`     // 图片 url
+	ImgStatues string `json:"img_statues"` // 图片状态
 }
 
 func ParseStory(data string) (Story, error) {
 	// 创建 Story 结构体实例
 	var story Story
+	story.Text = data
 
 	// 解析 JSON 数据
 	err := json.Unmarshal([]byte(data), &story)

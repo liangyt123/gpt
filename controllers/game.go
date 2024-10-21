@@ -51,12 +51,13 @@ func getCurrentPlayer(token string) *models.Player {
 			TextB:      r.TextB,
 			ResultA:    r.ResultA,
 			ResultB:    r.ResultB,
+			Text:       r.Text,
 			Territory:  r.Territory,
 			Story:      r.Story,
 			Background: r.Background,
 		}
 		historyMap[token] = []rpc.HistoryChoice{
-			{"开始游戏", r.Story},
+			{"开始游戏", r.Text},
 		}
 		fmt.Printf("player +%v \n", player)
 
@@ -98,6 +99,10 @@ func GetPlayerInfo(c *gin.Context) {
 		"mini_game":    choice.MiniGame,
 		"token":        token,
 		"background":   choice.Background,
+		"img_base64":   choice.ImgBase64,
+		"img_prompt":   choice.ImgPrompt,
+		"img_statues":  choice.ImgStatues,
+		"img_url":      choice.ImgURL,
 	})
 
 }
@@ -138,17 +143,18 @@ func MakeChoice(c *gin.Context) {
 	}
 
 	chText := ""
-	//chNo := 0
+	chNo := 0
 	chResult := ""
+	thisText := player.CurrentChoice.Text
 
 	if input.Choice == "A" {
 		chText = currentChoice.TextA
 		chResult = currentChoice.ResultA
-		//chNo = 1
+		chNo = 1
 	} else if input.Choice == "B" {
 		chText = currentChoice.TextB
 		chResult = currentChoice.ResultB
-		//chNo = 2
+		chNo = 2
 	} else {
 		// 换你怎么做
 	}
@@ -170,24 +176,43 @@ func MakeChoice(c *gin.Context) {
 		Round:   player.CurrentStep,
 		History: historyMap[input.Token],
 	})
+	if time.Now().Unix()%3 == 0 {
+		go func() {
+			r1, _ := rpc.GenImage(r.Story, rand.Intn(10)%3)
+			if r1.ImgBase64 != "" {
+				mut.Lock()
+				player.CurrentChoice.ImgBase64 = r1.ImgBase64
+				player.CurrentChoice.ImgPrompt = r1.ImgPrompt
+				player.CurrentChoice.ImgURL = r1.ImgURL
+				mut.Unlock()
+			}
+		}()
+	}
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get a valid response"})
 		return
 	}
 
 	historyMap[input.Token] = append(historyMap[input.Token], rpc.HistoryChoice{
-		chText,
-		r.Story,
+		fmt.Sprintf("%d", chNo),
+		thisText,
 	})
 	player.Territory = r.Territory
 	player.CurrentChoice = choices.Choice{
 		TextA:      r.TextA,
 		TextB:      r.TextB,
+		ResultA:    r.ResultA,
+		ResultB:    r.ResultB,
+		Text:       r.Text,
 		Story:      r.Story,
 		Background: r.Background,
 		Territory:  r.Territory,
 		MiniGame:   r.MiniGame,
-		ImageURL:   r.ImageURL,
+		ImgBase64:  r.ImgBase64,
+		ImgPrompt:  r.ImgPrompt,
+		ImgStatues: r.ImgStatues,
+		ImgURL:     r.ImgURL,
 	}
 
 	// 游戏结束判断
@@ -202,4 +227,40 @@ func MakeChoice(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, player)
+}
+
+// 处理 POST 请求的函数
+func GenerateImage(c *gin.Context) {
+
+	// ReqBody 定义请求体结构
+	type ReqBody struct {
+		Story     string `json:"story" binding:"required"`      // story 字段为必填
+		ImgServer int    `json:"img_server" binding:"required"` // img_server 字段为必填
+	}
+
+	// ReturnBody 定义返回体结构
+	type ReturnBody struct {
+		ImgPrompt string `json:"img_prompt"`
+		ImgBase64 string `json:"img_base64,omitempty"`
+		ImgURL    string `json:"img_url,omitempty"`
+		ImgStatus string `json:"img_status,omitempty"`
+	}
+
+	var reqBody ReqBody
+
+	// 绑定 JSON 请求体到结构体
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 模拟生成返回的数据
+	returnBody, err := rpc.GenImage(reqBody.Story, reqBody.ImgServer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate image"})
+		return
+	}
+
+	// 返回 JSON 响应
+	c.JSON(http.StatusOK, returnBody)
 }

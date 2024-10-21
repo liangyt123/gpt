@@ -1,15 +1,19 @@
 package choices
 
 type Choice struct {
-	TextA      string `json:"text_a"`     // 选项 A 文本
-	TextB      string `json:"text_b"`     // 选项 B 文本
-	ResultA    string `json:"result_a"`   // 选项 A 结果
-	ResultB    string `json:"result_b"`   // 选项 B 结果
-	Territory  int    `json:"territory"`  // 当前值
-	Story      string `json:"story"`      // 选择的故事
-	Background string `json:"background"` // 背景
-	MiniGame   string `json:"mini_game"`  // 小游戏
-	ImageURL   string `json:"image_url"`  // 图片 URL
+	TextA      string `json:"text_a"`      // 选项 A 文本
+	TextB      string `json:"text_b"`      // 选项 B 文本
+	ResultA    string `json:"result_a"`    // 选项 A 结果
+	ResultB    string `json:"result_b"`    // 选项 B 结果
+	Text       string `json:"text"`        // 故事文本
+	Territory  int    `json:"territory"`   // 当前值
+	Story      string `json:"story"`       // 选择的故事
+	Background string `json:"background"`  // 背景
+	MiniGame   string `json:"mini_game"`   // 小游戏
+	ImgBase64  string `json:"img_base64"`  // 图片 base64
+	ImgURL     string `json:"img_url"`     // 图片 url
+	ImgStatues string `json:"img_statues"` // 图片状态
+	ImgPrompt  string `json:"img_prompt"`  // 图片提示
 }
 
 // var EasyChoices = []Choice{

@@ -25,6 +25,7 @@ func main() {
 	// Routes
 	router.POST("/api/player", controllers.GetPlayerInfo)
 	router.POST("/api/choose", controllers.MakeChoice)
+	router.POST("/api/generate", controllers.GenerateImage)
 
 	// Serve HTML
 	router.GET("/", func(c *gin.Context) {
