@@ -1,6 +1,6 @@
 const API_BASE_URL = 'http://192.168.116.35:80'; // 根据你的后端地址配置
 let token = "";
-
+let playerInfo = {};
 // 获取玩家信息
 function getPlayerInfo() {
     fetch(`${API_BASE_URL}/api/player`, {
@@ -11,7 +11,7 @@ function getPlayerInfo() {
         .then(response => response.json())
         .then(data => {
             // 更新玩家信息和故事背景
-            
+            playerInfo = data;
             document.getElementById('playerInfo').innerHTML = `
                 <p>爱戴值: ${data.territory}</p>
                 <p>当前回合: ${data.current_step}</p>
@@ -27,36 +27,11 @@ function getPlayerInfo() {
             token = data.token;  // 保存 token
             // 更新按钮文本
 
-            console.log('aaa:', data);
-            if (data.mini_game != "") {
-                  // 如果是小游戏 强制开始游戏
-                if (data.mini_game == "连连看") {
-                    document.getElementById('miniGame').innerHTML = `
-                        <p>小游戏: ${data.mini_game}</p>
-                        <iframe src="static/minigame/link-game/index.html" width="100%" height="660px"></iframe>
-                    `;
-                }
-                if (data.mini_game == "打砖块") {
-                    document.getElementById('miniGame').innerHTML = `
-                        <p>小游戏: ${data.mini_game}</p>
-                        <iframe src="static/minigame/h5-game-blockBreaker/index.html" width="100%" height="660px"></iframe>
-                    `;
-                }
-
-                if (data.mini_game == "合成大西瓜") {
-                    document.getElementById('miniGame').innerHTML = `
-                        <p>小游戏: ${data.mini_game}</p>
-                        <iframe src="static/minigame/bigwatermelon/index.html"  height="660px"></iframe>
-                    `;
-                }
-                document.getElementById('choiceA').innerText = data.choice_a;
-                document.getElementById('choiceA').hidden = true;    
-                document.getElementById('choiceB').innerText = data.choice_b;
-            }else {
-                document.getElementById('choiceA').hidden = false;   
-                document.getElementById('choiceA').innerText = data.choice_a;            
-                document.getElementById('choiceB').innerText = data.choice_b;
-            }
+            console.log('aaa:', data);   
+            document.getElementById('choiceA').hidden = false;   
+            document.getElementById('choiceA').innerText = data.choice_a;            
+            document.getElementById('choiceB').innerText = data.choice_b;
+            
     
         });
 }
@@ -83,6 +58,36 @@ function makeChoice(choice) {
 
         getPlayerInfo();  // 重新加载玩家信息
     });
+    // 增加随机数 随机展示小游戏
+    let random = Math.floor(Math.random() * 10);
+  
+    let story = playerInfo.story;
+    if (random % 10 >= 0) {
+        fetch(`${API_BASE_URL}/api/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ story,token })
+        })
+        .then(response => response.json())
+        .then((data) => {
+            let imgUrl = data.img_url;
+            document.getElementById('miniGame').innerHTML = `
+                <p>剧情图片：</p>
+                <img src="`+imgUrl+ `" width="100%" height="660px"></iframe>
+            `;
+        })
+    // 如果是 %10 == 1 强制开始游戏
+    }else if (random % 10 == 1) {
+        document.getElementById('miniGame').innerHTML = `
+            <p>小游戏: 连连看</p>
+            <iframe src="static/minigame/link-game/index.html" width="100%" height="660px"></iframe>
+        `;
+        // 隐藏按钮
+        document.getElementById('choiceA').innerText = data.choice_a;
+        document.getElementById('choiceA').hidden = true;    
+        document.getElementById('choiceB').innerText = data.choice_b;
+    }
+
 }
 
 // 页面加载时获取玩家信息
