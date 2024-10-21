@@ -46,7 +46,7 @@ func getCurrentPlayer(token string) *models.Player {
 		}
 		fmt.Printf("%+v", r)
 
-		player.CurrentChoice = choices.Choice{
+		player.CurrentChoice = &choices.Choice{
 			TextA:      r.TextA,
 			TextB:      r.TextB,
 			ResultA:    r.ResultA,
@@ -99,10 +99,6 @@ func GetPlayerInfo(c *gin.Context) {
 		"mini_game":    choice.MiniGame,
 		"token":        token,
 		"background":   choice.Background,
-		"img_base64":   choice.ImgBase64,
-		"img_prompt":   choice.ImgPrompt,
-		"img_statues":  choice.ImgStatues,
-		"img_url":      choice.ImgURL,
 	})
 
 }
@@ -188,7 +184,7 @@ func MakeChoice(c *gin.Context) {
 		thisText,
 	})
 	player.Territory = r.Territory
-	player.CurrentChoice = choices.Choice{
+	player.CurrentChoice = &choices.Choice{
 		TextA:      r.TextA,
 		TextB:      r.TextB,
 		ResultA:    r.ResultA,
@@ -238,6 +234,7 @@ func GenerateImage(c *gin.Context) {
 		player.CurrentChoice.ImgBase64 = r1.ImgBase64
 		player.CurrentChoice.ImgPrompt = r1.ImgPrompt
 		player.CurrentChoice.ImgURL = r1.ImgURL
+
 		mut.Unlock()
 	}
 	fmt.Println("player", player)
