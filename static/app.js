@@ -72,7 +72,7 @@ function makeChoice(choice) {
         .then(response => response.json())
         .then((data) => {
             console.log('data1:', data);
-            let imgUrl = data.img_url;
+            let imgUrl = data.current_choice.img_url;
             // 如果 img_url 含有链接则展示图片
             if (imgUrl == undefined) {
                 return;

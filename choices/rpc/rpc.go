@@ -21,13 +21,12 @@ type HistoryChoice []string
 // 定义请求结构体
 
 type Req struct {
-	Text                string          `json:"text"`                  // 选项 文本
-	Story               string          `json:"story"`                 // 选择的故事
-	ImageBase64         string          `json:"image_base64"`          // 此时生成的图片
-	Round               int             `json:"round"`                 // 当前回合数
-	History             []HistoryChoice `json:"history"`               // 历史选择
-	ShouldGenerateImage bool            `json:"should_generate_image"` // 是否生成图片
-	Server              int             `json:"server"`                // 服务器
+	Text        string          `json:"text"`         // 选项 文本
+	Story       string          `json:"story"`        // 选择的故事
+	ImageBase64 string          `json:"image_base64"` // 此时生成的图片
+	Round       int             `json:"round"`        // 当前回合数
+	History     []HistoryChoice `json:"history"`      // 历史选择
+	Server      int             `json:"server"`       // 服务器
 }
 
 // 定义响应结构体
