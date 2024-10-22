@@ -1,6 +1,8 @@
 const API_BASE_URL = "http://192.168.116.35:80"; // 根据你的后端地址配置
 let token = "";
+let click_lock = false;
 let playerInfo = {};
+let current_step = 0;
 
 // 获取玩家信息
 function getPlayerInfo() {
@@ -11,6 +13,7 @@ function getPlayerInfo() {
   })
     .then((response) => response.json())
     .then((data) => {
+      current_step = data.current_step;
       // 更新玩家信息和故事背景
       playerInfo = Object.assign(playerInfo, data);
       document.getElementById("playerInfo").innerHTML = `
@@ -22,7 +25,7 @@ function getPlayerInfo() {
                 <p><span class="storyBackground_firstText">背景:</span> ${data.background}</p>
             `;
       document.getElementById("storyPlot").innerHTML = `
-                <p><span class="storyBackground_firstText">剧情:</span> ${data.story}</p>
+                <p><span  class="storyBackground_firstText">剧情:</span> <span id="text-to-display"></span></p>
             `;
 
       token = data.token; // 保存 token
@@ -34,11 +37,29 @@ function getPlayerInfo() {
       document.getElementById("choiceB").innerText = data.choice_b;
 
       document.getElementById("nameDialog").hidden = true;
+
+      const displayElement = document.getElementById("text-to-display");
+      let index = 0;
+
+      let time = null;
+      displayElement.textContent = "";
+      function typeText() {
+        if (index < data.story.length) {
+          displayElement.textContent += data.story[index];
+          index++;
+          time = setTimeout(typeText, 70); // 调整时间间隔以控制打字速度
+        }
+      }
+      if (time) clearTimeout(time);
+      typeText();
     });
 }
 
 // 提交玩家选择
 function makeChoice(choice) {
+  if (click_lock) return;
+  click_lock = true;
+  setButtonStatus(false);
   fetch(`${API_BASE_URL}/api/choose`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -51,7 +72,9 @@ function makeChoice(choice) {
       console.log(data);
       // 如果有结果，添加到日志框 且不是 undefined
       if (data.result) {
-        logContent.innerHTML += `<p>${data.result}</p>`;
+        logContent.innerHTML += `<p id="${"log_" + current_step}" >${
+          data.result
+        }</p>`;
       }
       document.getElementById("miniGame").innerHTML = ``;
       // 滚动到日志底部
@@ -79,16 +102,29 @@ function makeChoice(choice) {
           return;
         }
         if (imgUrl.includes("http")) {
-          let content2 =
-            `
-                    <p>达芬奇用画笔记录了这一刻：</p>
-                    <img src="` +
-            imgUrl +
-            `" width="375px" height="375px"></iframe>
-                `;
-          console.log("content:", content2);
-          document.getElementById("miniGame").innerHTML = content2;
+          let storyPlot = document.getElementById("storyPlot");
+          storyPlot.style.background = `url(${imgUrl}) no-repeat center center`;
+          storyPlot.style.backgroundSize = "100% 100%";
+          let log = document.getElementById("log_" + (current_step - 1));
+          const img = document.createElement("img");
+          img.src = imgUrl;
+          img.style.width = "200px";
+          img.style.height = "200px";
+          img.style.margin = "0 auto";
+          img.style.display = "block";
+          log.parentNode.insertBefore(img, log.nextSibling);
+          //   let content2 =
+          //     `
+          //             <p>达芬奇用画笔记录了这一刻：</p>
+          //             <img class="storyPlot_img" src="` +
+          //     imgUrl +
+          //     `></iframe>
+          //         `;
+          //   console.log("content:", content2);
+          //   document.getElementById("storyPlot").appendChild(content2);
         }
+        click_lock = false;
+        setButtonStatus(true);
       });
     // 如果是 %10 == 1 强制开始游戏
   } else if (true || random % 10 == 1) {
@@ -101,6 +137,8 @@ function makeChoice(choice) {
     document.getElementById("choiceA").hidden = true;
     document.getElementById("choiceB").hidden = true;
     // document.getElementById("choiceB").innerText = data.choice_b;
+    click_lock = false;
+    setButtonStatus(true);
   }
 }
 
@@ -116,8 +154,19 @@ function startGame() {
     document.getElementById("loading").style.display = "block";
     document.getElementById("loading_text").style.display = "block";
     getPlayerInfo();
+    let storyPlot = document.getElementById("storyPlot");
+    storyPlot.style.background = `url(${"./img/dialog_back.jpeg"}) no-repeat center center`;
+    storyPlot.style.backgroundSize = "100% 100%";
+    setButtonStatus(true);
   } else {
     alert("请输入玩家名称");
     return;
   }
+}
+
+function setButtonStatus(show) {
+  document.getElementById("showButton").style.display = show ? "block" : "none";
+  document.getElementById("showLoading").style.display = show
+    ? "none"
+    : "block";
 }
