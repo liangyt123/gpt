@@ -22,10 +22,10 @@ function getPlayerInfo() {
                 <p class="playerInfo_time">当前回合: <span class="playerInfo_time_span">${data.current_step}</span></p>
             `;
       document.getElementById("storyBackground").innerHTML = `
-                <p><span class="storyBackground_firstText">背景:</span> ${data.background}</p>
+                <p><span class="storyBackground_firstText">背景:</span><span id="text-to-display2">  </span></p>
             `;
       document.getElementById("storyPlot").innerHTML = `
-                <p><span  class="storyBackground_firstText">剧情:</span> <span id="text-to-display"></span></p>
+                <p id="storyPlot_P"><span  class="storyBackground_firstText">剧情:</span> <span id="text-to-display"></span></p>
             `;
 
       token = data.token; // 保存 token
@@ -39,15 +39,32 @@ function getPlayerInfo() {
       document.getElementById("nameDialog").hidden = true;
 
       const displayElement = document.getElementById("text-to-display");
+      const displayElement2 = document.getElementById("text-to-display2");
+      const typingContainer = document.getElementById("storyPlot_P");
+      const typingContainer2 = document.getElementById("storyBackground");
       let index = 0;
-
+      let index2 = 0;
       let time = null;
+      let time2 = null;
       displayElement.textContent = "";
+      displayElement2.textContent = "";
       function typeText() {
-        if (index < data.story.length) {
-          displayElement.textContent += data.story[index];
+        if (index < data.background.length) {
+          displayElement2.textContent += data.background[index];
           index++;
+          time2 = setTimeout(typeText, 70); // 调整时间间隔以控制打字速度
+          if (typingContainer2.scrollHeight > typingContainer2.clientHeight) {
+            typingContainer2.scrollTop =
+              typingContainer2.scrollHeight - typingContainer2.clientHeight;
+          }
+        } else if (index2 < data.story.length) {
+          displayElement.textContent += data.story[index2];
+          index2++;
           time = setTimeout(typeText, 70); // 调整时间间隔以控制打字速度
+          if (typingContainer.scrollHeight > typingContainer.clientHeight) {
+            typingContainer.scrollTop =
+              typingContainer.scrollHeight - typingContainer.clientHeight;
+          }
         }
       }
       if (time) clearTimeout(time);
@@ -155,7 +172,7 @@ function startGame() {
     document.getElementById("loading_text").style.display = "block";
     getPlayerInfo();
     let storyPlot = document.getElementById("storyPlot");
-    storyPlot.style.background = `url(${"./img/dialog_back.jpeg"}) no-repeat center center`;
+    storyPlot.style.background = `url(${"static/img/dialog_back.jpeg"}) no-repeat center center`;
     storyPlot.style.backgroundSize = "100% 100%";
     setButtonStatus(true);
   } else {
