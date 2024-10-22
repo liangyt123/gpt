@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>剧情游戏</title>
-    <link rel="stylesheet" href="/static/style.css?v=1.0">
-</head>
-<body>
-    <h1>剧情游戏</h1>
-    
-    <div id="playerInfo">
-        <p>爱戴值信息正在加载...</p>
+    <link rel="stylesheet" href="/static/style.css?v=1.0" />
+  </head>
+  <body>
+    <div class="nameDialog" id="nameDialog">
+      <div class="dialog">
+        <h2>欢迎来到帝国时代</h2>
+        <input type="text" id="playerName" placeholder="请输入你的名字" />
+        <button id="startGameButton" onclick="startGame()">开始游戏</button>
+        <div id="loading" class="loading-circle"></div>
+        <div id="loading_text" class="loading_text">帝国生成中...</div>
+      </div>
     </div>
 
-    <div id="storyBackground">
-        <p>故事背景正在加载...</p>
-    </div>
-    <div id="storyPlot">
-        <p>剧情正在加载...</p>
-    </div>
+    <div id="playerInfo"></div>
+
+    <div id="storyBackground"></div>
+    <div id="storyPlot"></div>
 
     <div>
-        <button id="choiceA" onclick="makeChoice('A')">选择 A</button>
-        <button id="choiceB" onclick="makeChoice('B')">选择 B</button>
+      <button id="choiceA" onclick="makeChoice('A')"></button>
+      <button id="choiceB" onclick="makeChoice('B')"></button>
     </div>
 
-    <div id = "miniGame">    
-        <p></p>
+    <div id="miniGame">
+      <p></p>
     </div>
 
     <div id="logBox">
-        <h2>事件日志</h2>
-        <div id="logContent">开始</div>
+      <h2>事件日志</h2>
+      <div id="logContent">开始</div>
     </div>
 
     <script src="/static/app.js"></script>
-</body>
+  </body>
 </html>
