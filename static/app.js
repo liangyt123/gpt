@@ -155,7 +155,7 @@ function startGame() {
     document.getElementById("loading_text").style.display = "block";
     getPlayerInfo();
     let storyPlot = document.getElementById("storyPlot");
-    storyPlot.style.background = `url(${"./img/dialog_back.jpeg"}) no-repeat center center`;
+    storyPlot.style.background = `url(${"/static/img/dialog_back.jpeg"}) no-repeat center center`;
     storyPlot.style.backgroundSize = "100% 100%";
     setButtonStatus(true);
   } else {
