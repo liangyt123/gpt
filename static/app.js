@@ -3,6 +3,7 @@ let token = "";
 let click_lock = false;
 let playerInfo = {};
 let current_step = 0;
+let gameOver = false;
 
 // 获取玩家信息
 function getPlayerInfo() {
@@ -73,6 +74,11 @@ function getPlayerInfo() {
 function makeChoice(choice) {
   if (click_lock) return;
   click_lock = true;
+  if (gameOver) {
+    alert("游戏已结束");
+    click_lock = false;
+    return;
+  }
   setButtonStatus(false);
   fetch(`${API_BASE_URL}/api/choose`, {
     method: "POST",
@@ -84,6 +90,15 @@ function makeChoice(choice) {
       // 更新日志框内容
       let logContent = document.getElementById("logContent");
       console.log(data);
+      if (
+        data.result == "因为你的多次错误选择，爱戴值小于 0，你失败了" ||
+        data.result == "因为你的多次正确选择，爱戴值大于 100，你胜利了"
+      ) {
+        gameOver = true;
+        alert(data.result);
+        click_lock = false;
+        return;
+      }
       // 如果有结果，添加到日志框 且不是 undefined
       if (data.result) {
         logContent.innerHTML += `<p id="${"log_" + current_step}" >${
