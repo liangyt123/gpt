@@ -103,11 +103,11 @@ func GetPlayerInfo(c *gin.Context) {
 
 }
 
-var endStep = 30
+var endStep = 100
 var falseEnd = "失败"
 var trueEnd = "胜利"
-var badEnd = "因为你的多次错误选择，爱戴值小于 0，你失败了，成为了一个🤡"
-var goodEnd = "因为你的多次正确选择，爱戴值大于 100，你胜利了，成为了一个👑"
+var badEnd = "因为你的多次错误选择，爱戴值小于 0，你失败了"
+var goodEnd = "因为你的多次正确选择，爱戴值大于 100，你胜利了"
 
 // 处理玩家的选择
 func MakeChoice(c *gin.Context) {
@@ -133,7 +133,7 @@ func MakeChoice(c *gin.Context) {
 		c.JSON(http.StatusOK, player)
 		return
 	}
-	if player.Territory >= endStep {
+	if player.Territory >= 100 {
 		player.Result = goodEnd
 		c.JSON(http.StatusOK, player)
 		return
