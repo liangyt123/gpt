@@ -103,7 +103,7 @@ func GetPlayerInfo(c *gin.Context) {
 
 }
 
-var endStep = 100
+var endStep = 30
 var falseEnd = "失败"
 var trueEnd = "胜利"
 var badEnd = "因为你的多次错误选择，爱戴值小于 0，你失败了"
