@@ -92,7 +92,8 @@ function makeChoice(choice) {
       console.log(data);
       if (
         data.result == "因为你的多次错误选择，爱戴值小于 0，你失败了" ||
-        data.result == "因为你的多次正确选择，爱戴值大于 100，你胜利了"
+        data.result == "因为你的多次正确选择，爱戴值大于 100，你胜利了"||
+        data.result == "失败，回合已尽，游戏已结束"
       ) {
         gameOver = true;
         alert(data.result);

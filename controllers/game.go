@@ -104,7 +104,7 @@ func GetPlayerInfo(c *gin.Context) {
 }
 
 var endStep = 30
-var falseEnd = "失败"
+var falseEnd = "失败，回合已尽，游戏已结束"
 var trueEnd = "胜利"
 var badEnd = "因为你的多次错误选择，爱戴值小于 0，你失败了"
 var goodEnd = "因为你的多次正确选择，爱戴值大于 100，你胜利了"
@@ -124,7 +124,7 @@ func MakeChoice(c *gin.Context) {
 	// 根据当前步骤和选择更新玩家信息
 	currentChoice := player.CurrentChoice
 	if player.Result == falseEnd || player.Result == trueEnd || player.Result == badEnd || player.Result == goodEnd || currentChoice.Story == "游戏结束" {
-		c.JSON(http.StatusOK, gin.H{"message": "游戏已结束"})
+		c.JSON(http.StatusOK, player)
 		return
 	}
 
